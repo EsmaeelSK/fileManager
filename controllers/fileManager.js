@@ -50,7 +50,11 @@ const createFolder = async (req, res, next) => {
                 parentId: req.body.parentId
             })
         }
-        if(!folder) throw {message: 'پوشه ساخته نشد.', statusCode: 400};
+        if(!folder) {
+            const error = new Error('پوشه ساخته نشد.');
+            error.statusCode = 400;
+            throw error;
+        }
         res.status(201).json({ 
             result: 'success',
             name: req.body.name,
@@ -66,7 +70,11 @@ const deleteFolder = async (req, res, next) => {
     let filesKey = [];
     let idies = []
     try{
-        if(req.body.idies.length === 0) throw new Error('پوشه یا فایلی را برای حذف کردن انتخاب کنید.').statusCode = 422; 
+        if(req.body.idies.length === 0){
+            const error = new Error('پوشه یا فایلی را برای حذف کردن انتخاب کنید.');
+            error.statusCode = 422;
+            throw error; 
+        } 
         idies = req.body.idies.slice();
         for (const id of idies)  {
             
@@ -126,13 +134,17 @@ const uploadFile = async (req, res, next) => {
                 const type = file.mimetype;
                 
                 let f;
-                if(req.query.id === '') {
+                if(req.query.parentId === '') {
                     f = await File.create({name, key, address, size, type})
                 } else {
                     f = await File.create({name, key, address, parentId, size, type})
                     console.log('f: \n', f);
                 }
-                if(!f) throw new Error('فایل ها در پایگاه داده ذخیره نشد.').statusCode = 400;
+                if(!f) {
+                    const error = new Error('فایل ها در پایگاه داده ذخیره نشد.');
+                    error.statusCode = 400;
+                    throw error;
+                }
                 files.push(f);
             }
             console.log(files);
