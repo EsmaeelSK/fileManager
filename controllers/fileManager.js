@@ -37,7 +37,6 @@ const getData = async (req, res, next) => {
     }
 }
 
-// validation
 const createFolder = async (req, res, next) => {
     try{
         let folder;
@@ -67,7 +66,7 @@ const deleteFolder = async (req, res, next) => {
     let filesKey = [];
     let idies = []
     try{
-        if(req.body.idies === []) throw new Error('پوشه یا فایلی را برای حذف کردن انتخاب کنید.').statusCode = 422; 
+        if(req.body.idies.length === 0) throw new Error('پوشه یا فایلی را برای حذف کردن انتخاب کنید.').statusCode = 422; 
         idies = req.body.idies.slice();
         for (const id of idies)  {
             
@@ -147,37 +146,10 @@ const uploadFile = async (req, res, next) => {
     })
 }
 
-// حذف چند فایل
-// const deleteFile = (req, res, next) => {
-//     deleteFileInBucket(req, res, next, {
-//         endpoint: process.env.LIARA_ENDPOINT,
-//         accessKeyId: process.env.LIARA_ACCESS_KEY,
-//         secretAccessKey: process.env.LIARA_SECRET_KEY,
-//         bucket: process.env.LIARA_BUCKET_NAME,
-//         key: req.params.bucketFolder + '/' + req.params.fileKey
-//     },
-//     async (req) => {
-//         let file;
-//         try{
-//             file = await File.findOneAndRemove({key: req.params.bucketFolder + '/' + req.params.fileKey});
-//             if(file === null) throw err;
-//             return res.status(200).json({
-//                 result: 'success'
-//             })
-
-//         } catch (err) {
-//             const error = file !== null ? new Error('مشکلی پیش آمده') : new Error('همچین فایلی پیدا نشد');
-//             error.statusCode = file !== null ? 400 : 404;
-//             next(error);
-//         }
-//     })
-// }
-
 module.exports = {
     getData,
     createFolder,
     deleteFolder,
     uploadFile,
-    // deleteFile,
 }
 
